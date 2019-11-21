@@ -49,6 +49,7 @@ export class AppComponent {
 
   // ログイン処理。これでGoogleのログインページに遷移して、ログインすると元のページに戻る
   login() {
+    // popupさせる場合はsignInWithPopup
     // this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
     this.isProcessLogin = true;
     this.afAuth.auth.signInWithRedirect(new auth.GoogleAuthProvider());
