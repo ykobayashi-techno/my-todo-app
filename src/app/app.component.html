@@ -6,18 +6,35 @@
   <div class="spacer"></div>
 </div>
 
-<div class="content" role="main">
-  <div class="inputContent">
-    <input class="inputBox" type="text" [(ngModel)]="inputName" />
-    <button class="addButton" (click)="clickAddTodo(inputName)">追加</button>
+<h1 *ngIf="isProcessLogin; else showAuthChecked">Loading ...</h1>
+
+<ng-template #showAuthChecked>
+  <div *ngIf="afAuth.authState | async; let user; else showLogin">
+    <div *ngIf="isPermitted; else isNotPermitted" class="content" role="main">
+      <div class="inputContent">
+        <input class="inputBox" type="text" [(ngModel)]="inputName" />
+        <button class="addButton" (click)="clickAddTodo(inputName)">追加</button>
+      </div>
+
+      <hr class="border" />
+
+      <ul class=tasks>
+        <li class="task" *ngFor="let item of items | async">
+          <span class="taskBody" [class.isCompleted]="item.isCompleted" (click)="clickItem(item)">{{item.body}}</span>
+          <button class="delButton" (click)="clickDeleteItem(item)">削除</button>
+        </li>
+      </ul>
+    </div>
+
+    <ng-template #isNotPermitted>
+      <p class="message">権限がありません</p>
+    </ng-template>
+
+    <button (click)="logout()">Logout</button>
   </div>
 
-  <hr class="border" />
-
-  <ul class=tasks>
-    <li class="task" *ngFor="let item of items | async">
-      <span class="taskBody" [class.isCompleted]="item.isCompleted" (click)="clickItem(item)">{{item.body}}</span>
-      <button class="delButton" (click)="clickDeleteItem(item)">削除</button>
-    </li>
-  </ul>
-</div>
+  <ng-template #showLogin>
+    <p class="message">Please login.</p>
+    <button (click)="login()">Login with Google</button>
+  </ng-template>
+</ng-template>
